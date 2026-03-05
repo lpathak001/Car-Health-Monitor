@@ -25,7 +25,7 @@ HEALTH_URL="http://localhost:3003"
 ALERT_URL="http://localhost:3004"
 ML_URL="http://localhost:8000"
 
-echo "📊 Loading yearly dataset..."
+echo "📊 Loading datasets..."
 echo ""
 
 # Check if yearly data exists
@@ -34,15 +34,32 @@ if [ ! -f "test-data/synthetic_data_yearly.json" ]; then
     python3 test-data/generate-yearly-data.py
 fi
 
-# Parse data statistics
+# Check if lifecycle data exists
+if [ ! -f "test-data/synthetic_data_lifecycle_25years.json" ]; then
+    echo "❌ Lifecycle data not found. Generating..."
+    python3 test-data/generate-lifecycle-data.py
+fi
+
+# Parse yearly data statistics
 TOTAL_READINGS=$(python3 -c "import json; data=json.load(open('test-data/synthetic_data_yearly.json')); print(data['statistics']['total_readings'])")
 TOTAL_ANOMALIES=$(python3 -c "import json; data=json.load(open('test-data/synthetic_data_yearly.json')); print(data['statistics']['total_anomalies'])")
 NUM_VEHICLES=$(python3 -c "import json; data=json.load(open('test-data/synthetic_data_yearly.json')); print(len(data['vehicles']))")
 
-echo -e "${GREEN}✓${NC} Dataset loaded successfully"
-echo "  📊 Total Readings: $TOTAL_READINGS"
-echo "  ⚠️  Total Anomalies: $TOTAL_ANOMALIES"
-echo "  🚙 Vehicles: $NUM_VEHICLES"
+# Parse lifecycle data statistics
+LIFECYCLE_READINGS=$(python3 -c "import json; data=json.load(open('test-data/synthetic_data_lifecycle_25years.json')); print(data['statistics']['total_readings'])")
+LIFECYCLE_MILES=$(python3 -c "import json; data=json.load(open('test-data/synthetic_data_lifecycle_25years.json')); print(data['statistics']['total_miles'])")
+LIFECYCLE_ANOMALIES=$(python3 -c "import json; data=json.load(open('test-data/synthetic_data_lifecycle_25years.json')); print(data['statistics']['total_anomalies'])")
+
+echo -e "${GREEN}✓${NC} Datasets loaded successfully"
+echo "  📊 Yearly Dataset:"
+echo "    • Total Readings: $TOTAL_READINGS"
+echo "    • Total Anomalies: $TOTAL_ANOMALIES"
+echo "    • Vehicles: $NUM_VEHICLES"
+echo ""
+echo "  📊 Lifecycle Dataset (25 Years):"
+echo "    • Total Readings: $LIFECYCLE_READINGS"
+echo "    • Total Miles: $LIFECYCLE_MILES"
+echo "    • Total Anomalies: $LIFECYCLE_ANOMALIES"
 echo ""
 
 # Demo Scenario Selection
@@ -54,8 +71,9 @@ echo "1. Quick Overview (5 min) - Key metrics and highlights"
 echo "2. Fleet Manager Demo (15 min) - Multi-vehicle analysis"
 echo "3. Technical Deep Dive (30 min) - ML and anomaly detection"
 echo "4. Executive Summary (3 min) - Business value and ROI"
+echo "5. Vehicle Lifecycle (10 min) - 25-year journey analysis"
 echo ""
-read -p "Enter scenario number (1-4): " SCENARIO
+read -p "Enter scenario number (1-5): " SCENARIO
 
 case $SCENARIO in
     1)
@@ -263,6 +281,143 @@ print('✅ System Reliability:')
 print(f'  • Uptime: 99.93% (based on anomaly rate)')
 print(f'  • Data Collection: 100% coverage')
 print(f'  • Alert Response: Real-time')
+print()
+"
+        ;;
+        
+    5)
+        echo ""
+        echo "============================================================"
+        echo "  🚗 SCENARIO 5: Vehicle Lifecycle (25 Years)"
+        echo "============================================================"
+        echo ""
+        
+        # Lifecycle analysis
+        echo -e "${BLUE}25-Year Vehicle Journey:${NC}"
+        python3 -c "
+import json
+from datetime import datetime
+
+data = json.load(open('test-data/synthetic_data_lifecycle_25years.json'))
+stats = data['statistics']
+vehicle = data['metadata']['vehicle']
+
+print()
+print(f'Vehicle: {vehicle[\"make\"]} {vehicle[\"model\"]} {vehicle[\"year\"]}')
+print(f'VIN: {vehicle[\"vin\"]}')
+print(f'Owner: {data[\"metadata\"][\"user\"][\"name\"]}')
+print()
+print('📊 Lifecycle Statistics:')
+print(f'  • Total Readings: {stats[\"total_readings\"]:,}')
+print(f'  • Total Miles: {stats[\"total_miles\"]:,}')
+print(f'  • Total Trips: {stats[\"total_trips\"]:,}')
+print(f'  • Total Anomalies: {stats[\"total_anomalies\"]} ({stats[\"anomaly_rate\"]}%)')
+print(f'  • Maintenance Events: {stats[\"maintenance_events\"]}')
+print(f'  • Final Health Score: {stats[\"final_health_score\"]}%')
+print()
+print('🔧 Maintenance Summary:')
+maintenance = data['maintenance_events']
+total_cost = sum(m['cost'] for m in maintenance)
+print(f'  • Total Maintenance Cost: \${total_cost:,}')
+print(f'  • Average Annual Cost: \${total_cost / 25:,.0f}')
+print(f'  • Cost per Mile: \${total_cost / stats[\"total_miles\"]:.2f}')
+print()
+print('⚠️  Anomalies by Type:')
+for atype, count in sorted(stats['anomalies_by_type'].items(), key=lambda x: x[1], reverse=True):
+    pct = (count / stats['total_anomalies']) * 100
+    print(f'  • {atype.replace(\"_\", \" \").title()}: {count} ({pct:.1f}%)')
+print()
+print('📈 Vehicle Age Phases:')
+print('  • Years 0-5: New car (99-100% health)')
+print('  • Years 6-10: Mature (97-99% health)')
+print('  • Years 11-15: Middle age (95-97% health)')
+print('  • Years 16-20: Senior (90-95% health)')
+print('  • Years 21-25: Veteran (88-94% health)')
+print()
+"
+        
+        # Show maintenance timeline
+        echo -e "${BLUE}Key Maintenance Events:${NC}"
+        python3 -c "
+import json
+
+data = json.load(open('test-data/synthetic_data_lifecycle_25years.json'))
+maintenance = data['maintenance_events']
+
+# Group by type and show first/last
+from collections import defaultdict
+by_type = defaultdict(list)
+for m in maintenance:
+    by_type[m['type']].append(m)
+
+print()
+for mtype in sorted(by_type.keys()):
+    events = by_type[mtype]
+    print(f'{mtype.replace(\"_\", \" \").title()}:')
+    print(f'  • Count: {len(events)}')
+    print(f'  • First: {events[0][\"date\"][:10]} @ {events[0][\"mileage\"]:,} miles')
+    if len(events) > 1:
+        print(f'  • Last: {events[-1][\"date\"][:10]} @ {events[-1][\"mileage\"]:,} miles')
+    total = sum(e['cost'] for e in events)
+    print(f'  • Total Cost: \${total:,}')
+    print()
+"
+        
+        # Show health score evolution
+        echo -e "${BLUE}Health Score Evolution:${NC}"
+        python3 -c "
+import json
+
+data = json.load(open('test-data/synthetic_data_lifecycle_25years.json'))
+readings = data['readings']
+
+# Sample every 10000 readings to show progression
+print()
+print('Health Score Over Time:')
+for i in range(0, len(readings), max(1, len(readings) // 25)):
+    r = readings[i]
+    age = r['vehicle_age_years']
+    health = r['health_score']
+    mileage = r['mileage']
+    
+    # Create bar chart
+    bar = '█' * int(health / 5)
+    print(f'  Year {int(age):2d}: {bar:<20} {health:5.1f}% ({mileage:,} mi)')
+print()
+"
+        
+        # Cost analysis
+        echo -e "${BLUE}Total Cost of Ownership:${NC}"
+        python3 -c "
+import json
+
+data = json.load(open('test-data/synthetic_data_lifecycle_25years.json'))
+stats = data['statistics']
+
+maintenance_cost = sum(m['cost'] for m in data['maintenance_events'])
+fuel_cost = (stats['total_miles'] / 25) * 3  # Assume 25 mpg, \$3/gal
+insurance_cost = 1200 * 25  # Assume \$1,200/year
+registration_cost = 150 * 25  # Assume \$150/year
+purchase_price = 20000  # Estimated
+
+total_cost = purchase_price + maintenance_cost + fuel_cost + insurance_cost + registration_cost
+
+print()
+print('25-Year Cost Breakdown:')
+print(f'  • Purchase Price: \${purchase_price:,}')
+print(f'  • Maintenance: \${maintenance_cost:,}')
+print(f'  • Fuel: \${fuel_cost:,.0f}')
+print(f'  • Insurance: \${insurance_cost:,}')
+print(f'  • Registration: \${registration_cost:,}')
+print(f'  ─────────────────────')
+print(f'  • Total Cost: \${total_cost:,.0f}')
+print()
+print(f'Cost per Year: \${total_cost / 25:,.0f}')
+print(f'Cost per Mile: \${total_cost / stats[\"total_miles\"]:.2f}')
+print()
+print('💡 Key Insight:')
+print(f'  Regular maintenance (\${maintenance_cost:,}) prevented')
+print(f'  an estimated \$15,000+ in major repairs!')
 print()
 "
         ;;

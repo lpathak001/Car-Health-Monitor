@@ -93,21 +93,24 @@ Car Health Monitor is a production-ready microservices application that:
 
 ## 📊 Demo & Testing
 
-### Customer Demo (1 Year Data)
+### Customer Demo (Multiple Datasets)
 ```bash
-# Interactive demo with 4 scenarios
+# Interactive demo with 5 scenarios
 chmod +x customer-demo.sh
 ./customer-demo.sh
 
 # Scenarios:
-# 1. Quick Overview (5 min)
-# 2. Fleet Manager Demo (15 min)
-# 3. Technical Deep Dive (30 min)
-# 4. Executive Summary (3 min)
+# 1. Quick Overview (5 min) - Key metrics
+# 2. Fleet Manager Demo (15 min) - Multi-vehicle analysis
+# 3. Technical Deep Dive (30 min) - ML and anomaly detection
+# 4. Executive Summary (3 min) - Business value and ROI
+# 5. Vehicle Lifecycle (10 min) - 25-year journey analysis
 ```
 
-**Dataset**: 75,470 readings across 365 days, 5 vehicles  
-**Documentation**: See `CUSTOMER_DEMO_GUIDE.md`
+**Datasets Available**:
+- 1-Year Dataset: 75,470 readings across 365 days, 5 vehicles
+- 25-Year Lifecycle: 371,143 readings, single vehicle, 182K miles
+- Documentation: See `CUSTOMER_DEMO_GUIDE.md`
 
 ### Run Demo Workflow
 ```bash
@@ -193,6 +196,7 @@ car-health-monitor/
 - [Customer Demo Guide](CUSTOMER_DEMO_GUIDE.md) - How to deliver demos
 - [Demo Quick Reference](DEMO_QUICK_REFERENCE.md) - One-page cheat sheet
 - [Yearly Data Summary](test-data/YEARLY_DATA_SUMMARY.md) - 1-year dataset docs
+- [Lifecycle Data Summary](test-data/LIFECYCLE_DATA_SUMMARY.md) - 25-year dataset docs
 
 ### Testing & Validation
 - [Test Results](test-data/TEST_RESULTS.md) - Validation results
