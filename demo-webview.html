@@ -239,11 +239,20 @@
             border-radius: 8px;
             text-align: center;
             border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .phase:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
         }
 
         .phase.active {
             border-color: #667eea;
             background: #e8ebff;
+            transform: scale(1.05);
         }
 
         .phase-name {
@@ -256,6 +265,42 @@
             font-size: 0.85em;
             color: #666;
             margin: 5px 0;
+        }
+
+        .stage-details {
+            background: #f8f9ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .stage-details.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stage-details h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stage-details p {
+            color: #666;
+            line-height: 1.6;
+            margin: 10px 0;
         }
 
         .loading {
@@ -617,36 +662,76 @@
             <div class="chart">
                 <h3>5 Lifecycle Stages</h3>
                 <div class="lifecycle-phases">
-                    <div class="phase active">
+                    <div class="phase active" onclick="selectStage(1)">
                         <div class="phase-name">Stage 1</div>
                         <div class="phase-stat">New Car</div>
                         <div class="phase-stat">0-5 years</div>
                         <div class="phase-stat">0.04% anomalies</div>
                     </div>
-                    <div class="phase">
+                    <div class="phase" onclick="selectStage(2)">
                         <div class="phase-name">Stage 2</div>
                         <div class="phase-stat">Mature</div>
                         <div class="phase-stat">6-10 years</div>
                         <div class="phase-stat">0.07% anomalies</div>
                     </div>
-                    <div class="phase">
+                    <div class="phase" onclick="selectStage(3)">
                         <div class="phase-name">Stage 3</div>
                         <div class="phase-stat">Middle Age</div>
                         <div class="phase-stat">11-15 years</div>
                         <div class="phase-stat">0.13% anomalies</div>
                     </div>
-                    <div class="phase">
+                    <div class="phase" onclick="selectStage(4)">
                         <div class="phase-name">Stage 4</div>
                         <div class="phase-stat">Senior</div>
                         <div class="phase-stat">16-20 years</div>
                         <div class="phase-stat">0.21% anomalies</div>
                     </div>
-                    <div class="phase">
+                    <div class="phase" onclick="selectStage(5)">
                         <div class="phase-name">Stage 5</div>
                         <div class="phase-stat">Veteran</div>
                         <div class="phase-stat">21-25 years</div>
                         <div class="phase-stat">0.30% anomalies</div>
                     </div>
+                </div>
+
+                <div id="stage-1" class="stage-details active">
+                    <h4>🆕 Stage 1: New Car (0-5 Years)</h4>
+                    <p><strong>Characteristics:</strong> Peak performance, minimal wear, excellent reliability</p>
+                    <p><strong>Readings:</strong> 81,806 | <strong>Anomalies:</strong> 33 (0.04%) | <strong>Health:</strong> 100%</p>
+                    <p><strong>Maintenance:</strong> 17 events | <strong>Cost:</strong> $960 | <strong>Focus:</strong> Preventive care</p>
+                    <p><strong>Key Insight:</strong> Regular maintenance during this phase sets the foundation for long-term reliability.</p>
+                </div>
+
+                <div id="stage-2" class="stage-details">
+                    <h4>📈 Stage 2: Mature (6-10 Years)</h4>
+                    <p><strong>Characteristics:</strong> Stable performance, minor wear beginning, still reliable</p>
+                    <p><strong>Readings:</strong> 78,320 | <strong>Anomalies:</strong> 55 (0.07%) | <strong>Health:</strong> 97.7%</p>
+                    <p><strong>Maintenance:</strong> 20 events | <strong>Cost:</strong> $1,540 | <strong>Focus:</strong> Fluid changes, inspections</p>
+                    <p><strong>Key Insight:</strong> Slight increase in anomalies indicates normal aging. Consistent maintenance keeps vehicle healthy.</p>
+                </div>
+
+                <div id="stage-3" class="stage-details">
+                    <h4>⚙️ Stage 3: Middle Age (11-15 Years)</h4>
+                    <p><strong>Characteristics:</strong> Increased wear, more frequent maintenance needed, still functional</p>
+                    <p><strong>Readings:</strong> 74,103 | <strong>Anomalies:</strong> 96 (0.13%) | <strong>Health:</strong> 95.1%</p>
+                    <p><strong>Maintenance:</strong> 20 events | <strong>Cost:</strong> $3,610 | <strong>Focus:</strong> Component replacement</p>
+                    <p><strong>Key Insight:</strong> Highest maintenance costs occur here. Proactive repairs prevent major failures.</p>
+                </div>
+
+                <div id="stage-4" class="stage-details">
+                    <h4>👴 Stage 4: Senior (16-20 Years)</h4>
+                    <p><strong>Characteristics:</strong> Significant wear, higher anomaly rate, requires careful monitoring</p>
+                    <p><strong>Readings:</strong> 69,052 | <strong>Anomalies:</strong> 145 (0.21%) | <strong>Health:</strong> 88.9%</p>
+                    <p><strong>Maintenance:</strong> 16 events | <strong>Cost:</strong> $1,070 | <strong>Focus:</strong> Critical repairs only</p>
+                    <p><strong>Key Insight:</strong> Anomaly rate increases 5x. Selective maintenance extends vehicle life cost-effectively.</p>
+                </div>
+
+                <div id="stage-5" class="stage-details">
+                    <h4>🏆 Stage 5: Veteran (21-25 Years)</h4>
+                    <p><strong>Characteristics:</strong> Mature vehicle, highest anomaly rate, still operational with care</p>
+                    <p><strong>Readings:</strong> 65,688 | <strong>Anomalies:</strong> 197 (0.30%) | <strong>Health:</strong> 94.9%</p>
+                    <p><strong>Maintenance:</strong> 22 events | <strong>Cost:</strong> $1,840 | <strong>Focus:</strong> Targeted interventions</p>
+                    <p><strong>Key Insight:</strong> Despite age, vehicle remains reliable. Smart maintenance decisions keep it running strong.</p>
                 </div>
             </div>
 
@@ -733,6 +818,24 @@
 
             // Scroll to content
             document.querySelector('.demo-content.active').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function selectStage(stageNum) {
+            // Hide all stage details
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`stage-${i}`).classList.remove('active');
+            }
+
+            // Remove active class from all phases
+            document.querySelectorAll('.phase').forEach(phase => {
+                phase.classList.remove('active');
+            });
+
+            // Show selected stage details
+            document.getElementById(`stage-${stageNum}`).classList.add('active');
+
+            // Add active class to clicked phase
+            event.target.closest('.phase').classList.add('active');
         }
 
         // Initialize first scenario
