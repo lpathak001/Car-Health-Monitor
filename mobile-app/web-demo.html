@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Health Monitor - Mobile Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; }
+        .phone { width: 375px; height: 667px; margin: 20px auto; background: white; border-radius: 30px; box-shadow: 0 10px 50px rgba(0,0,0,0.3); overflow: hidden; position: relative; }
+        .status-bar { height: 20px; background: #000; color: white; font-size: 12px; padding: 0 10px; display: flex; justify-content: space-between; align-items: center; }
+        .screen { height: 597px; overflow-y: auto; padding: 20px; }
+        .tab-bar { height: 50px; background: white; border-top: 1px solid #ddd; display: flex; justify-content: space-around; align-items: center; }
+        .tab { flex: 1; text-align: center; padding: 5px; cursor: pointer; color: #666; }
+        .tab.active { color: #2196F3; font-weight: 600; }
+        .title { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+        .gauge { width: 120px; height: 120px; border-radius: 60px; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: bold; color: white; }
+        .gauge.good { background: #4CAF50; }
+        .gauge.warning { background: #FFC107; }
+        .gauge.critical { background: #F44336; }
+        .label { text-align: center; color: #666; margin-top: 10px; }
+        .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .chart { display: flex; justify-content: space-around; align-items: flex-end; height: 200px; margin-top: 10px; }
+        .bar { width: 40px; background: #2196F3; border-radius: 5px; }
+        .alert-card { border-left: 4px solid; }
+        .alert-card.critical { border-left-color: #F44336; }
+        .alert-card.warning { border-left-color: #FFC107; }
+        .alert-card.info { border-left-color: #2196F3; }
+        .alert-message { font-weight: 600; margin-bottom: 5px; }
+        .alert-time { font-size: 12px; color: #666; }
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .info-label { color: #666; font-size: 12px; }
+        .info-value { font-weight: 600; }
+        .button { background: #2196F3; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-top: 10px; cursor: pointer; font-weight: 600; }
+        .button.secondary { background: #4CAF50; }
+        .button.danger { background: #F44336; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+        .toggle { width: 50px; height: 26px; background: #ccc; border-radius: 13px; position: relative; cursor: pointer; }
+        .toggle.on { background: #4CAF50; }
+        .toggle-slider { width: 22px; height: 22px; background: white; border-radius: 11px; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
+        .toggle.on .toggle-slider { left: 26px; }
+        .hidden { display: none; }
+        .profile-header { text-align: center; padding: 20px; }
+        .profile-name { font-size: 20px; font-weight: bold; }
+        .profile-email { font-size: 14px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+        </div>
+        
+        <!-- Dashboard Screen -->
+        <div id="dashboard" class="screen">
+            <div class="title">Vehicle Health Dashboard</div>
+            <div class="gauge good" id="healthGauge">80</div>
+            <div class="label">Health Score</div>
+            
+            <div class="card">
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">Sensor Trends</div>
+                <div class="chart">
+                    <div class="bar" style="height: 130px;"></div>
+                    <div class="bar" style="height: 140px;"></div>
+                    <div class="bar" style="height: 150px;"></div>
+                    <div class="bar" style="height: 160px;"></div>
+                    <div class="bar" style="height: 170px;"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div style="font-size: 18px; font-weight: 600;">Status: Good</div>
+                <div style="font-size: 14px; color: #666; margin-top: 5px;">Last updated: Just now</div>
+            </div>
+        </div>
+        
+        <!-- Alerts Screen -->
+        <div id="alerts" class="screen hidden">
+            <div class="title">Alerts & Notifications</div>
+            
+            <div class="card alert-card warning">
+                <div class="alert-message">⚠️ High Temperature Detected</div>
+                <div class="alert-time">Temp: 150°F, RPM: 5000 - 2 minutes ago</div>
+            </div>
+            
+            <div class="card alert-card info">
+                <div class="alert-message">ℹ️ Maintenance Due Soon</div>
+                <div class="alert-time">Next service in 500 miles - 1 day ago</div>
+            </div>
+            
+            <div class="card alert-card critical">
+                <div class="alert-message">🔴 Brake Pad Wear Detected</div>
+                <div class="alert-time">Requires attention - 3 days ago</div>
+            </div>
+        </div>
+        
+        <!-- Vehicle Screen -->
+        <div id="vehicle" class="screen hidden">
+            <div class="title">Vehicle Management</div>
+            
+            <div class="card">
+                <div class="info-row">
+                    <div>
+                        <div class="info-label">Make</div>
+                        <div class="info-value">Toyota</div>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div>
+                        <div class="info-label">Model</div>
+                        <div class="info-value">Camry</div>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div>
+                        <div class="info-label">Year</div>
+                        <div class="info-value">2022</div>
+                    </div>
+                </div>
+                <div class="info-row" style="border: none;">
+                    <div>
+                        <div class="info-label">VIN</div>
+                        <div class="info-value">1HGBH41JXMN109186</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button">Edit Vehicle</div>
+            <div class="button secondary">Add New Vehicle</div>
+        </div>
+        
+        <!-- Profile Screen -->
+        <div id="profile" class="screen hidden">
+            <div class="title">User Profile</div>
+            
+            <div class="card profile-header">
+                <div class="profile-name">Demo User</div>
+                <div class="profile-email">demo@carhealthmonitor.com</div>
+            </div>
+            
+            <div class="card">
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 15px;">Settings</div>
+                
+                <div class="setting-row">
+                    <span>Push Notifications</span>
+                    <div class="toggle on" onclick="this.classList.toggle('on')">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="setting-row">
+                    <span>Dark Mode</span>
+                    <div class="toggle" onclick="this.classList.toggle('on')">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button">Edit Profile</div>
+            <div class="button danger">Logout</div>
+        </div>
+        
+        <div class="tab-bar">
+            <div class="tab active" onclick="showScreen('dashboard')">📊<br>Dashboard</div>
+            <div class="tab" onclick="showScreen('alerts')">🔔<br>Alerts</div>
+            <div class="tab" onclick="showScreen('vehicle')">🚗<br>Vehicle</div>
+            <div class="tab" onclick="showScreen('profile')">👤<br>Profile</div>
+        </div>
+    </div>
+    
+    <script>
+        function showScreen(screenName) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+            // Show selected screen
+            document.getElementById(screenName).classList.remove('hidden');
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.closest('.tab').classList.add('active');
+        }
+        
+        // Simulate real-time health score updates
+        setInterval(() => {
+            const gauge = document.getElementById('healthGauge');
+            const currentScore = parseInt(gauge.textContent);
+            const newScore = Math.max(70, Math.min(95, currentScore + Math.floor(Math.random() * 5) - 2));
+            gauge.textContent = newScore;
+            
+            // Update color based on score
+            gauge.className = 'gauge ' + (newScore >= 80 ? 'good' : newScore >= 60 ? 'warning' : 'critical');
+        }, 3000);
+    </script>
+</body>
+</html>
