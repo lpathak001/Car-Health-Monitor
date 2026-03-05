@@ -6,20 +6,27 @@
     <title>Car Health Monitor - Mobile Demo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; }
-        .phone { width: 375px; height: 667px; margin: 20px auto; background: white; border-radius: 30px; box-shadow: 0 10px 50px rgba(0,0,0,0.3); overflow: hidden; position: relative; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; transition: background 0.3s ease; }
+        body.dark-mode { background: #1a1a1a; }
+        .phone { width: 375px; height: 667px; margin: 20px auto; background: white; border-radius: 30px; box-shadow: 0 10px 50px rgba(0,0,0,0.3); overflow: hidden; position: relative; transition: background 0.3s ease; }
+        .phone.dark-mode { background: #2d2d2d; }
         .status-bar { height: 20px; background: #000; color: white; font-size: 12px; padding: 0 10px; display: flex; justify-content: space-between; align-items: center; }
-        .screen { height: 597px; overflow-y: auto; padding: 20px; }
-        .tab-bar { height: 50px; background: white; border-top: 1px solid #ddd; display: flex; justify-content: space-around; align-items: center; }
-        .tab { flex: 1; text-align: center; padding: 5px; cursor: pointer; color: #666; }
+        .screen { height: 597px; overflow-y: auto; padding: 20px; background: white; transition: background 0.3s ease, color 0.3s ease; }
+        .screen.dark-mode { background: #1a1a1a; color: #e0e0e0; }
+        .tab-bar { height: 50px; background: white; border-top: 1px solid #ddd; display: flex; justify-content: space-around; align-items: center; transition: background 0.3s ease, border-color 0.3s ease; }
+        .tab-bar.dark-mode { background: #2d2d2d; border-top-color: #444; }
+        .tab { flex: 1; text-align: center; padding: 5px; cursor: pointer; color: #666; transition: color 0.3s ease; }
+        .tab.dark-mode { color: #999; }
         .tab.active { color: #2196F3; font-weight: 600; }
         .title { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
         .gauge { width: 120px; height: 120px; border-radius: 60px; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: bold; color: white; }
         .gauge.good { background: #4CAF50; }
         .gauge.warning { background: #FFC107; }
         .gauge.critical { background: #F44336; }
-        .label { text-align: center; color: #666; margin-top: 10px; }
-        .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .label { text-align: center; color: #666; margin-top: 10px; transition: color 0.3s ease; }
+        .label.dark-mode { color: #999; }
+        .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: background 0.3s ease, box-shadow 0.3s ease; }
+        .card.dark-mode { background: #2d2d2d; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         .chart { display: flex; justify-content: space-around; align-items: flex-end; height: 200px; margin-top: 10px; }
         .bar { width: 40px; background: #2196F3; border-radius: 5px; }
         .alert-card { border-left: 4px solid; }
@@ -27,22 +34,26 @@
         .alert-card.warning { border-left-color: #FFC107; }
         .alert-card.info { border-left-color: #2196F3; }
         .alert-message { font-weight: 600; margin-bottom: 5px; }
-        .alert-time { font-size: 12px; color: #666; }
-        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .info-label { color: #666; font-size: 12px; }
+        .alert-time { font-size: 12px; color: #666; transition: color 0.3s ease; }
+        .alert-time.dark-mode { color: #999; }
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; transition: border-color 0.3s ease; }
+        .info-row.dark-mode { border-bottom-color: #444; }
+        .info-label { color: #666; font-size: 12px; transition: color 0.3s ease; }
+        .info-label.dark-mode { color: #999; }
         .info-value { font-weight: 600; }
         .button { background: #2196F3; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-top: 10px; cursor: pointer; font-weight: 600; }
         .button.secondary { background: #4CAF50; }
         .button.danger { background: #F44336; }
         .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
-        .toggle { width: 50px; height: 26px; background: #ccc; border-radius: 13px; position: relative; cursor: pointer; }
+        .toggle { width: 50px; height: 26px; background: #ccc; border-radius: 13px; position: relative; cursor: pointer; transition: background 0.3s ease; }
         .toggle.on { background: #4CAF50; }
         .toggle-slider { width: 22px; height: 22px; background: white; border-radius: 11px; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
         .toggle.on .toggle-slider { left: 26px; }
         .hidden { display: none; }
         .profile-header { text-align: center; padding: 20px; }
         .profile-name { font-size: 20px; font-weight: bold; }
-        .profile-email { font-size: 14px; color: #666; margin-top: 5px; }
+        .profile-email { font-size: 14px; color: #666; margin-top: 5px; transition: color 0.3s ease; }
+        .profile-email.dark-mode { color: #999; }
     </style>
 </head>
 <body>
@@ -151,7 +162,7 @@
                 
                 <div class="setting-row">
                     <span>Dark Mode</span>
-                    <div class="toggle" onclick="this.classList.toggle('on')">
+                    <div class="toggle" id="darkModeToggle" onclick="toggleDarkMode()">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
@@ -179,6 +190,35 @@
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.target.closest('.tab').classList.add('active');
         }
+        
+        function toggleDarkMode() {
+            const toggle = document.getElementById('darkModeToggle');
+            const isDarkMode = toggle.classList.toggle('on');
+            
+            // Apply dark mode to all elements
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            document.querySelector('.phone').classList.toggle('dark-mode', isDarkMode);
+            document.querySelectorAll('.screen').forEach(s => s.classList.toggle('dark-mode', isDarkMode));
+            document.querySelector('.tab-bar').classList.toggle('dark-mode', isDarkMode);
+            document.querySelectorAll('.tab').forEach(t => t.classList.toggle('dark-mode', isDarkMode));
+            document.querySelectorAll('.label').forEach(l => l.classList.toggle('dark-mode', isDarkMode));
+            document.querySelectorAll('.card').forEach(c => c.classList.toggle('dark-mode', isDarkMode));
+            document.querySelectorAll('.alert-time').forEach(a => a.classList.toggle('dark-mode', isDarkMode));
+            document.querySelectorAll('.info-row').forEach(r => r.classList.toggle('dark-mode', isDarkMode));
+            document.querySelectorAll('.info-label').forEach(l => l.classList.toggle('dark-mode', isDarkMode));
+            document.querySelectorAll('.profile-email').forEach(e => e.classList.toggle('dark-mode', isDarkMode));
+            
+            // Save preference
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+        
+        // Load dark mode preference on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (savedDarkMode) {
+                document.getElementById('darkModeToggle').click();
+            }
+        });
         
         // Simulate real-time health score updates
         setInterval(() => {
