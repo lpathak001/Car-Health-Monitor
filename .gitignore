@@ -13,3 +13,4 @@ __pycache__/
 # Large synthetic datasets (>100MB)
 test-data/synthetic_data_lifecycle_25years.json
 test-data/synthetic_data_yearly.json
+test-data/lifecycle_stage_*.json
