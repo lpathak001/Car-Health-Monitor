@@ -1,0 +1,147 @@
+{
+  "metadata": {
+    "generated_at": "2026-03-05T07:17:33.091568",
+    "total_stages": 5,
+    "total_years": 25,
+    "vehicle": {
+      "id": "VEH-LIFECYCLE-001",
+      "make": "Toyota",
+      "model": "Camry",
+      "year": 2001,
+      "vin": "4T1BF28B81U123456",
+      "purchase_date": "2001-01-01",
+      "initial_mileage": 0,
+      "owner": "user-lifecycle-001"
+    },
+    "user": {
+      "id": "user-lifecycle-001",
+      "email": "james.wilson@example.com",
+      "name": "James Wilson"
+    }
+  },
+  "stages": {
+    "1": {
+      "name": "New Car",
+      "description": "Fresh from dealer, excellent condition",
+      "years": "0-5",
+      "file": "lifecycle_stage_1_new_car.json",
+      "statistics": {
+        "total_readings": 81806,
+        "total_anomalies": 34,
+        "anomaly_rate": 0.04,
+        "anomalies_by_type": {
+          "low_tire_pressure": 17,
+          "low_fuel": 17
+        },
+        "mileage_start": 0,
+        "mileage_end": 40157.5,
+        "mileage_driven": 40157.5,
+        "health_start": 100.0,
+        "health_end": 100.0,
+        "health_change": 0.0,
+        "maintenance_events": 17,
+        "maintenance_cost": 960
+      }
+    },
+    "2": {
+      "name": "Mature",
+      "description": "Still reliable, some wear visible",
+      "years": "6-10",
+      "file": "lifecycle_stage_2_mature.json",
+      "statistics": {
+        "total_readings": 78320,
+        "total_anomalies": 56,
+        "anomaly_rate": 0.07,
+        "anomalies_by_type": {
+          "low_tire_pressure": 15,
+          "high_vibration": 16,
+          "battery_issue": 9,
+          "low_fuel": 16
+        },
+        "mileage_start": 40158,
+        "mileage_end": 78587.5,
+        "mileage_driven": 38429.5,
+        "health_start": 100.0,
+        "health_end": 97.7,
+        "health_change": -2.3,
+        "maintenance_events": 20,
+        "maintenance_cost": 1540
+      }
+    },
+    "3": {
+      "name": "Middle Age",
+      "description": "More repairs needed, aging evident",
+      "years": "11-15",
+      "file": "lifecycle_stage_3_middle_age.json",
+      "statistics": {
+        "total_readings": 74103,
+        "total_anomalies": 96,
+        "anomaly_rate": 0.13,
+        "anomalies_by_type": {
+          "overheating": 24,
+          "low_oil_pressure": 23,
+          "high_vibration": 20,
+          "battery_issue": 29
+        },
+        "mileage_start": 78588,
+        "mileage_end": 114953.0,
+        "mileage_driven": 36365.0,
+        "health_start": 97.7,
+        "health_end": 95.1,
+        "health_change": -2.6,
+        "maintenance_events": 20,
+        "maintenance_cost": 3610
+      }
+    },
+    "4": {
+      "name": "Senior",
+      "description": "Noticeable degradation, higher costs",
+      "years": "16-20",
+      "file": "lifecycle_stage_4_senior.json",
+      "statistics": {
+        "total_readings": 69052,
+        "total_anomalies": 144,
+        "anomaly_rate": 0.21,
+        "anomalies_by_type": {
+          "high_vibration": 37,
+          "overheating": 38,
+          "low_oil_pressure": 26,
+          "battery_issue": 43
+        },
+        "mileage_start": 114953,
+        "mileage_end": 148837.0,
+        "mileage_driven": 33884.0,
+        "health_start": 95.0,
+        "health_end": 88.9,
+        "health_change": -6.1,
+        "maintenance_events": 16,
+        "maintenance_cost": 1070
+      }
+    },
+    "5": {
+      "name": "Veteran",
+      "description": "Runs but needs constant care",
+      "years": "21-25",
+      "file": "lifecycle_stage_5_veteran.json",
+      "statistics": {
+        "total_readings": 65688,
+        "total_anomalies": 199,
+        "anomaly_rate": 0.3,
+        "anomalies_by_type": {
+          "low_oil_pressure": 46,
+          "overheating": 52,
+          "battery_issue": 55,
+          "high_vibration": 46
+        },
+        "mileage_start": 148837,
+        "mileage_end": 181039.0,
+        "mileage_driven": 32202.0,
+        "health_start": 88.9,
+        "health_end": 94.9,
+        "health_change": 6.0,
+        "maintenance_events": 22,
+        "maintenance_cost": 1840
+      }
+    }
+  }
+}

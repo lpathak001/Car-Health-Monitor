@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import { Pool } from 'pg';
 import { createClient } from 'redis';
 import winston from 'winston';
-import axios from 'axios';
 
 const app = express();
 const PORT = process.env.PORT || 3006;
@@ -185,7 +184,7 @@ app.get('/api/predictive/maintenance-schedule/:vehicleId', async (req: Request, 
     `;
 
     const result = await pool.query(query, [vehicleId]);
-    const { last_reading, total_readings, anomalies } = result.rows[0];
+    const { last_reading, anomalies } = result.rows[0];
 
     const schedule = [
       {
@@ -291,10 +290,11 @@ app.get('/api/predictive/rul/:vehicleId', async (req: Request, res: Response) =>
     `;
 
     const result = await pool.query(query, [vehicleId]);
-    const { total_readings, anomalies, avg_temp, avg_oil_pressure, avg_battery } = result.rows[0];
+    const { anomalies, avg_temp, avg_oil_pressure, avg_battery } = result.rows[0];
+    const totalReadings = result.rows[0].total_readings;
 
     // Calculate RUL based on multiple factors
-    const anomalyRate = (anomalies / total_readings) * 100;
+    const anomalyRate = (anomalies / totalReadings) * 100;
     const tempDegradation = Math.max(0, (avg_temp - 95) / 20); // Normalized 0-1
     const oilDegradation = Math.max(0, (45 - avg_oil_pressure) / 20); // Normalized 0-1
     const batteryDegradation = Math.max(0, (13.8 - avg_battery) / 1.8); // Normalized 0-1
